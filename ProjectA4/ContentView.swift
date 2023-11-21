@@ -1,117 +1,90 @@
-//
-//  ContentView.swift
-//  ProjectA4
-//
-//  Created by Louis Perrenot on 20/11/2023.
-//
-
 import SwiftUI
+import Foundation
 
 struct ContentView: View {
-    @State var buttonBackgroundColor: Color = .green
-    @State var productName = ""
-    @State var imageString = ""
-    @State var imageUrl = ""
-    @State var date = Date()
-    @State var price: Float = 0
-    @State var color: Color = Color.white
+    private let dateFormatter: DateFormatter = {
+        let formatter = DateFormatter()
+        formatter.dateStyle = .short
+        formatter.timeStyle = .none
+        return formatter
+    }()
     
-    private let numberFormatter: NumberFormatter
-    
-    init() {
-          numberFormatter = NumberFormatter()
-          numberFormatter.numberStyle = .currency
-          numberFormatter.maximumFractionDigits = 2
-        }
-    
-    // Tout ce qui est UI
+    @State private var courses = [
+        Course(id: UUID(), name: "Spaghetti", dateToBuy: Date(), imageUrl: nil, price: 20.0, colorToShow: Color.brown, store: Store(id: UUID(), name: "Fnac"), urgency: .low),
+        Course(id: UUID(), name: "Steak", dateToBuy: Date(), imageUrl: nil, price: 5.0, colorToShow: Color.red, store: Store(id: UUID(), name: "Carrefour"), urgency: .urgent),
+        Course(id: UUID(), name: "Iphone 15 Pro", dateToBuy: Date(), imageUrl: nil, price: 1050.99, colorToShow: Color.black, store: Store(id: UUID(), name: "Apple"), urgency: .normal),
+        Course(id: UUID(), name: "Iphone 14 Pro", dateToBuy: Date(), imageUrl: nil, price: 1050.99, colorToShow: Color.black, store: Store(id: UUID(), name: "Apple"), urgency: .normal)
+        ]
+
     var body: some View {
-        VStack {
-            Form {
-                Section {
-                    TextField("Name", text: $productName)
-                    DatePicker("Date d'achat", selection: $date, displayedComponents: [.date])
-                    TextField("Image", text: $imageString)
-                    TextField("0,00", value: $price, formatter: numberFormatter)
-                        .keyboardType(.numberPad)
-                    ColorPicker("Couleur d'affichage", selection: $color, supportsOpacity: false)
-                } header: {
-                    Text("Créer une course")
-                        .font(/*@START_MENU_TOKEN@*/.title/*@END_MENU_TOKEN@*/)
-                        .fontWeight(/*@START_MENU_TOKEN@*/.bold/*@END_MENU_TOKEN@*/)
+        
+        NavigationView {
+            VStack {
+                HStack {
+                    Image(systemName: "plus")
+                        .font(.system(size: 20))
+                        .foregroundColor(.clear)
+                    Spacer()
+                    Text("Courses")
+                        .font(.system(size: 20))
                         .foregroundStyle(Color.black)
-                }
-                
-                Section {
-                    AsyncImage(url: URL(string: imageUrl)) {
-                        image in image
-                            .resizable()
-                            .aspectRatio(contentMode: .fit)
-                    } placeholder: {
-                        Rectangle()
-                            .foregroundColor(.gray)
-                    }
-                    .frame(width: 300, height: 300)
-                    .padding()
-                    Button(action: {
-                        imageUrl = imageString
-                        UIApplication.shared.sendAction(#selector(UIResponder.resignFirstResponder), to: nil, from: nil, for: nil)
-                    }, label: {
-                        Text("Charger l'image")
+                    Spacer()
+                    NavigationLink(destination: AddCourse(CoursesList: $courses), label: {
+                        Image(systemName: "plus")
+                            .font(.system(size: 20))
                     })
                 }
-                
-                Button(action: {
-                    UIApplication.shared.sendAction(#selector(UIResponder.resignFirstResponder), to: nil, from: nil, for: nil)
-                }, label: {
-                    Text("Ajouter")
-                        .foregroundStyle(Color.white)
-                        .padding()
-                        .frame(maxWidth: /*@START_MENU_TOKEN@*/.infinity/*@END_MENU_TOKEN@*/)
-                        .background(Color.blue)
-                        .cornerRadius(10)
-                })
+                .padding(.horizontal)
+                List {
+                    ForEach(Array(courses.grouped(by: { $0.urgency })), id: \.key) { groupedCourses in
+                        Section(header: Text(groupedCourses.key.rawValue.capitalized)) {
+                            ForEach(groupedCourses.value) { course in
+                                NavigationLink(destination: AddCourse(CoursesList: $courses), label: {
+                                    HStack(alignment: .center) {
+                                        Circle()
+                                            .frame(width: 20, height: 20)
+                                            .foregroundColor(course.colorToShow)
+                                            .padding(4)
+                                            .overlay(
+                                                Circle()
+                                                    .stroke(course.colorToShow, lineWidth: 2)
+                                            )
+                                        Text("\(course.name)")
+                                        Spacer()
+                                        Text("\(dateFormatter.string(from: course.dateToBuy))")
+                                    }
+                                })
+                            }
+                        }
+                    }
+                    .onDelete { indexSet in
+                        courses.remove(atOffsets: indexSet)
+                    }
+                    .onMove { indexSet, index in
+                        courses.move(fromOffsets: indexSet, toOffset: index)
+                      }
+                }
             }
-            .navigationBarTitle("Settings")
-            
-//            Image("eb3a7ee4fb78ce25efdb622df6202d78")
-//                .resizable()
-//                .aspectRatio(contentMode: .fill)
-//                .frame(width: 300, height: 300)
-//                .clipped()
-//                .clipShape(Rectangle())
-//                .frame(width: UIScreen.main.bounds.width)
-                
-//            Image(systemName: "bolt.horizontal.fill")
-//                .font(.system(size: 50))
-//                .foregroundStyle(Color.purple)
-//            HStack {
-//                Text("Hello")
-//                    .font(.system(size: 36))
-//                    .foregroundStyle(Color.blue)
-//                Text("Hello")
-//                    .fontWeight(/*@START_MENU_TOKEN@*/.bold/*@END_MENU_TOKEN@*/)
-//            }
-//            .padding()
-//            .background(Color.red)
-//            TextField(/*@START_MENU_TOKEN@*/"Placeholder"/*@END_MENU_TOKEN@*/, text: $name)
-//            Button(action: {
-//                if buttonBackgroundColor == .red {
-//                    buttonBackgroundColor = .green
-//                } else {
-//                    buttonBackgroundColor = .red
-//                }
-//            }, label: {
-//                Text("\(name)")
-//                    .font(.title)
-//                    .foregroundStyle(Color.red)
-//                    .padding()
-//                    .background(buttonBackgroundColor)
-//            })
         }
     }
 }
 
-#Preview {
-    ContentView()
+extension Array {
+    func grouped<Key: Hashable>(by keyForValue: (Element) -> Key) -> [Key: [Element]] {
+        var result = [Key: [Element]]()
+        for element in self {
+            let key = keyForValue(element)
+            if result[key] == nil {
+                result[key] = [Element]()
+            }
+            result[key]?.append(element)
+        }
+        return result
+    }
+}
+
+struct ContentView_Previews: PreviewProvider {
+    static var previews: some View {
+        ContentView()
+    }
 }
