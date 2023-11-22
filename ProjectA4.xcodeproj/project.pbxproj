@@ -8,6 +8,10 @@
 
 /* Begin PBXBuildFile section */
 		BB1EB83B2B0CBDD9005C3E85 /* SingleCourse.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB1EB83A2B0CBDD9005C3E85 /* SingleCourse.swift */; };
+		BB1EB83D2B0DF0ED005C3E85 /* CourseCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB1EB83C2B0DF0ED005C3E85 /* CourseCell.swift */; };
+		BB1EB8432B0E0C90005C3E85 /* PexelsAPIResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB1EB8422B0E0C90005C3E85 /* PexelsAPIResponse.swift */; };
+		BB1EB8452B0E0CAC005C3E85 /* PexelsPhotoListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB1EB8442B0E0CAC005C3E85 /* PexelsPhotoListView.swift */; };
+		BB1EB84B2B0E19CF005C3E85 /* SwiftyTranslate in Frameworks */ = {isa = PBXBuildFile; productRef = BB1EB84A2B0E19CF005C3E85 /* SwiftyTranslate */; };
 		BBA09EF02B0B6C0F001CD4CB /* ProjectA4App.swift in Sources */ = {isa = PBXBuildFile; fileRef = BBA09EEF2B0B6C0F001CD4CB /* ProjectA4App.swift */; };
 		BBA09EF22B0B6C0F001CD4CB /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = BBA09EF12B0B6C0F001CD4CB /* ContentView.swift */; };
 		BBA09EF42B0B6C11001CD4CB /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = BBA09EF32B0B6C11001CD4CB /* Assets.xcassets */; };
@@ -16,10 +20,14 @@
 		BF9E62E52B0BD75E00B53BEB /* Store.swift in Sources */ = {isa = PBXBuildFile; fileRef = BF9E62E42B0BD75E00B53BEB /* Store.swift */; };
 		BF9E62E72B0BD96500B53BEB /* Keep.swift in Sources */ = {isa = PBXBuildFile; fileRef = BF9E62E62B0BD96500B53BEB /* Keep.swift */; };
 		BF9E62E92B0BE38C00B53BEB /* AddCourse.swift in Sources */ = {isa = PBXBuildFile; fileRef = BF9E62E82B0BE38C00B53BEB /* AddCourse.swift */; };
+		BFB79A572B0D387600C6DD5F /* EditCourse.swift in Sources */ = {isa = PBXBuildFile; fileRef = BFB79A562B0D387600C6DD5F /* EditCourse.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
 		BB1EB83A2B0CBDD9005C3E85 /* SingleCourse.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SingleCourse.swift; sourceTree = "<group>"; };
+		BB1EB83C2B0DF0ED005C3E85 /* CourseCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CourseCell.swift; sourceTree = "<group>"; };
+		BB1EB8422B0E0C90005C3E85 /* PexelsAPIResponse.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PexelsAPIResponse.swift; sourceTree = "<group>"; };
+		BB1EB8442B0E0CAC005C3E85 /* PexelsPhotoListView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PexelsPhotoListView.swift; sourceTree = "<group>"; };
 		BBA09EEC2B0B6C0F001CD4CB /* ProjectA4.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = ProjectA4.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		BBA09EEF2B0B6C0F001CD4CB /* ProjectA4App.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProjectA4App.swift; sourceTree = "<group>"; };
 		BBA09EF12B0B6C0F001CD4CB /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
@@ -29,6 +37,7 @@
 		BF9E62E42B0BD75E00B53BEB /* Store.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Store.swift; sourceTree = "<group>"; };
 		BF9E62E62B0BD96500B53BEB /* Keep.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Keep.swift; sourceTree = "<group>"; };
 		BF9E62E82B0BE38C00B53BEB /* AddCourse.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddCourse.swift; sourceTree = "<group>"; };
+		BFB79A562B0D387600C6DD5F /* EditCourse.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditCourse.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -36,6 +45,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				BB1EB84B2B0E19CF005C3E85 /* SwiftyTranslate in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -45,6 +55,7 @@
 		BBA09EE32B0B6C0F001CD4CB = {
 			isa = PBXGroup;
 			children = (
+				BB1EB8442B0E0CAC005C3E85 /* PexelsPhotoListView.swift */,
 				BF9E62E62B0BD96500B53BEB /* Keep.swift */,
 				BBA09EEE2B0B6C0F001CD4CB /* ProjectA4 */,
 				BBA09EED2B0B6C0F001CD4CB /* Products */,
@@ -62,7 +73,10 @@
 		BBA09EEE2B0B6C0F001CD4CB /* ProjectA4 */ = {
 			isa = PBXGroup;
 			children = (
+				BB1EB8422B0E0C90005C3E85 /* PexelsAPIResponse.swift */,
+				BB1EB83C2B0DF0ED005C3E85 /* CourseCell.swift */,
 				BB1EB83A2B0CBDD9005C3E85 /* SingleCourse.swift */,
+				BFB79A562B0D387600C6DD5F /* EditCourse.swift */,
 				BF9E62E82B0BE38C00B53BEB /* AddCourse.swift */,
 				BF9E62E22B0BD6A200B53BEB /* Course.swift */,
 				BBA09EEF2B0B6C0F001CD4CB /* ProjectA4App.swift */,
@@ -98,6 +112,9 @@
 			dependencies = (
 			);
 			name = ProjectA4;
+			packageProductDependencies = (
+				BB1EB84A2B0E19CF005C3E85 /* SwiftyTranslate */,
+			);
 			productName = ProjectA4;
 			productReference = BBA09EEC2B0B6C0F001CD4CB /* ProjectA4.app */;
 			productType = "com.apple.product-type.application";
@@ -126,6 +143,9 @@
 				Base,
 			);
 			mainGroup = BBA09EE32B0B6C0F001CD4CB;
+			packageReferences = (
+				BB1EB8492B0E19CF005C3E85 /* XCRemoteSwiftPackageReference "SwiftyTranslate" */,
+			);
 			productRefGroup = BBA09EED2B0B6C0F001CD4CB /* Products */;
 			projectDirPath = "";
 			projectRoot = "";
@@ -154,9 +174,13 @@
 			files = (
 				BF9E62E72B0BD96500B53BEB /* Keep.swift in Sources */,
 				BF9E62E32B0BD6A200B53BEB /* Course.swift in Sources */,
+				BFB79A572B0D387600C6DD5F /* EditCourse.swift in Sources */,
+				BB1EB83D2B0DF0ED005C3E85 /* CourseCell.swift in Sources */,
+				BB1EB8432B0E0C90005C3E85 /* PexelsAPIResponse.swift in Sources */,
 				BF9E62E92B0BE38C00B53BEB /* AddCourse.swift in Sources */,
 				BBA09EF22B0B6C0F001CD4CB /* ContentView.swift in Sources */,
 				BB1EB83B2B0CBDD9005C3E85 /* SingleCourse.swift in Sources */,
+				BB1EB8452B0E0CAC005C3E85 /* PexelsPhotoListView.swift in Sources */,
 				BBA09EF02B0B6C0F001CD4CB /* ProjectA4App.swift in Sources */,
 				BF9E62E52B0BD75E00B53BEB /* Store.swift in Sources */,
 			);
@@ -364,6 +388,25 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
+
+/* Begin XCRemoteSwiftPackageReference section */
+		BB1EB8492B0E19CF005C3E85 /* XCRemoteSwiftPackageReference "SwiftyTranslate" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/cpageler93/SwiftyTranslate";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 1.0.0;
+			};
+		};
+/* End XCRemoteSwiftPackageReference section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		BB1EB84A2B0E19CF005C3E85 /* SwiftyTranslate */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = BB1EB8492B0E19CF005C3E85 /* XCRemoteSwiftPackageReference "SwiftyTranslate" */;
+			productName = SwiftyTranslate;
+		};
+/* End XCSwiftPackageProductDependency section */
 	};
 	rootObject = BBA09EE42B0B6C0F001CD4CB /* Project object */;
 }

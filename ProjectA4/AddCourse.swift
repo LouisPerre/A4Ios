@@ -6,18 +6,19 @@
 //
 
 import SwiftUI
+import SwiftyTranslate
 
 let storesList = [
-        Store(id: UUID(), name: "Fnac"),
-        Store(id: UUID(), name: "Apple"),
-        Store(id: UUID(), name: "Carrefour"),
-        Store(id: UUID(), name: "Castorama"),
-        Store(id: UUID(), name: "Metro")
-    ]
+    Store(id: UUID(), name: "Fnac"),
+    Store(id: UUID(), name: "Apple"),
+    Store(id: UUID(), name: "Carrefour"),
+    Store(id: UUID(), name: "Castorama"),
+    Store(id: UUID(), name: "Metro")
+]
 
 struct AddCourse: View {
     
-    @Binding var CoursesList: [Course]
+    @ObservedObject var coursesCollection: CoursesCollection
     
     @State var productName = ""
     @State var imageString = ""
@@ -27,6 +28,10 @@ struct AddCourse: View {
     @State var color: Color = Color.white
     @State private var selectedStore: Store = storesList.first!
     @State var selectedUrgency: CourseUrgency = CourseUrgency.normal
+    @State private var isShowingPhotoPicker = false
+    @State private var pexelsPhotos: [PexelsAPIResponse.Photo] = []
+    @State private var selectedImageUrl: String?
+    @State var translatedValue: String?
     
     
     private var formattedPrice: NumberFormatter {
@@ -41,7 +46,7 @@ struct AddCourse: View {
     @Environment(\.dismiss) private var dismiss
     
     var body: some View {
-//        Text("Hello World !")
+        //        Text("Hello World !")
         VStack {
             Form {
                 Section {
@@ -62,11 +67,6 @@ struct AddCourse: View {
                         }
                     }
                     .pickerStyle(.segmented)
-//                    if let selectedStore = selectedStore {
-//                        Text("Magasin : \(selectedStore.name)")
-//                    } else {
-//                        Text("Pas de magasin")
-//                    }
                 } header: {
                     Text("Créer une course")
                         .font(.title)
@@ -74,32 +74,54 @@ struct AddCourse: View {
                         .foregroundStyle(Color.black)
                 }
                 
+                //                Section {
+                //                    AsyncImage(url: URL(string: imageUrl)) {
+                //                        image in image
+                //                            .resizable()
+                //                            .aspectRatio(contentMode: .fit)
+                //                    } placeholder: {
+                //                        Image("mike-petrucci-c9FQyqIECds-unsplash")
+                //                            .resizable()
+                //                            .aspectRatio(contentMode: .fill)
+                //                    }
+                //                    .frame(width: 300, height: 300)
+                //                    .padding()
+                //
+                //                    Button(action: {
+                //                        imageUrl = imageString
+                //                        UIApplication.shared.sendAction(#selector(UIResponder.resignFirstResponder), to: nil, from: nil, for: nil)
+                //                    }, label: {
+                //                        Text("Charger l'image")
+                //                    })
+                //                }
+                
                 Section {
-                    AsyncImage(url: URL(string: imageUrl)) {
-                        image in image
-                            .resizable()
-                            .aspectRatio(contentMode: .fit)
-                    } placeholder: {
-                        Image("mike-petrucci-c9FQyqIECds-unsplash")
-                            .resizable()
-                            .aspectRatio(contentMode: .fill)
-                    }
-                    .frame(width: 300, height: 300)
-                    .padding()
-                    
                     Button(action: {
-                        imageUrl = imageString
-                        UIApplication.shared.sendAction(#selector(UIResponder.resignFirstResponder), to: nil, from: nil, for: nil)
-                    }, label: {
-                        Text("Charger l'image")
-                    })
+                        fetchPexelsPhotos()
+                        isShowingPhotoPicker.toggle()
+                    }) {
+                        Text("Choisir une photo depuis Pexels")
+                    }
+                    .sheet(isPresented: $isShowingPhotoPicker) {
+                        PexelsPhotoListView(photos: pexelsPhotos, selectedImageUrl: $selectedImageUrl)
+                    }
+                    
+                    if let imageUrl = selectedImageUrl {
+                        AsyncImage(url: URL(string: imageUrl)) { image in
+                            image.resizable().aspectRatio(contentMode: .fit)
+                            
+                        } placeholder: {
+                            Image("placeholder_image")
+                                .resizable()
+                                .aspectRatio(contentMode: .fill)
+                        }
+                        .frame(width: 300, height: 300)
+                        .padding()
+                    }
                 }
                 
                 Button(action: {
-                    print("lala")
-//                    UIApplication.shared.sendAction(#selector(UIResponder.resignFirstResponder), to: nil, from: nil, for: nil)
-                    
-                    CoursesList.append(Course(id: UUID(), name: productName, dateToBuy: dateToBuy, imageUrl: imageUrl, price: price, colorToShow: color, store: selectedStore, urgency: selectedUrgency))
+                    coursesCollection.courses.append(Course(name: productName, dateToBuy: dateToBuy, imageUrl: selectedImageUrl ?? "", price: price, colorToShow: color, store: selectedStore, urgency: selectedUrgency))
                     dismiss()
                 }, label: {
                     Text("Ajouter la course")
@@ -113,13 +135,44 @@ struct AddCourse: View {
             .navigationBarTitle("Settings")
         }
     }
+    
+    private func fetchPexelsPhotos() {
+        let apiKey = "QprF859P9BhSHL20k4yexJadcC96in9vAcSqvtFQVITdjZ0tuaAlbwyn"
+        var query = imageString != "" ? imageString : "course"
+        let perPage = 5 // Change the number of photos you want to fetch
+        SwiftyTranslate.translate(text: query, from: "fr", to: "en") { result in
+            switch result {
+                case .success(let translation):
+                    print("Translated: \(translation.translated)")
+                    translatedValue = translation.translated
+                    guard let url = URL(string: "https://api.pexels.com/v1/search?query=\(translatedValue!)&per_page=\(perPage)") else { return }
+                    
+                    var request = URLRequest(url: url)
+                    request.addValue("\(apiKey)", forHTTPHeaderField: "Authorization")
+                    
+                    URLSession.shared.dataTask(with: request) { data, response, error in
+                        guard let data = data, error == nil else {
+                            print("Error fetching Pexels photos: \(error?.localizedDescription ?? "Unknown error")")
+                            return
+                        }
+                        
+                        do {
+                            let result = try JSONDecoder().decode(PexelsAPIResponse.self, from: data)
+                            print(result)
+                            DispatchQueue.main.async {
+                                pexelsPhotos = result.photos
+                            }
+                        } catch {
+                            print("Error decoding Pexels photos JSON: \(error)")
+                        }
+                    }.resume()
+                case .failure(let error):
+                    print("Error: \(error)")
+            }
+        }
+    }
 }
 
 #Preview {
-    AddCourse(CoursesList: .constant([
-        Course(id: UUID(), name: "Spaghetti", dateToBuy: Date(), imageUrl: nil, price: 20.0, colorToShow: Color.brown, store: Store(id: UUID(), name: "Fnac"), urgency: .low),
-        Course(id: UUID(), name: "Steak", dateToBuy: Date(), imageUrl: nil, price: 5.0, colorToShow: Color.red, store: Store(id: UUID(), name: "Carrefour"), urgency: .urgent),
-        Course(id: UUID(), name: "Iphone 15 Pro", dateToBuy: Date(), imageUrl: nil, price: 1050.99, colorToShow: Color.black, store: Store(id: UUID(), name: "Apple"), urgency: .normal),
-        Course(id: UUID(), name: "Iphone 14 Pro", dateToBuy: Date(), imageUrl: nil, price: 1050.99, colorToShow: Color.black, store: Store(id: UUID(), name: "Apple"), urgency: .normal)
-        ]))
+    AddCourse(coursesCollection: CoursesCollection(courses:  Course.previewCourse))
 }

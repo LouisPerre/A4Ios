@@ -24,9 +24,8 @@ struct SingleCourse: View {
         return formatter
     }
     
-    @Binding var Course: Course
-    @Binding var CoursesList: [Course]
-    
+    @ObservedObject var Course: Course
+    @State private var showEditCourse = false
     @Environment(\.dismiss) private var dismiss
     
     var body: some View {
@@ -99,19 +98,19 @@ struct SingleCourse: View {
             .padding(.horizontal)
             .navigationTitle(Course.name)
             .navigationBarItems(
-                trailing: NavigationLink(destination: ContentView(), label: {
+                trailing: Button(action: {
+                    showEditCourse.toggle()
+                }) {
                     Image(systemName: "pencil")
-                })
+                }
+                    .sheet(isPresented: $showEditCourse) {
+                        EditCourse(Course: Course, showEditCourse: showEditCourse)
+                    }
             )
         }
     }
 }
 
 #Preview {
-    SingleCourse(Course: .constant(Course(id: UUID(), name: "Spaghetti", dateToBuy: Date(), imageUrl: nil, price: 20.0, colorToShow: Color.brown, store: Store(id: UUID(), name: "Fnac"), urgency: .low)), CoursesList: .constant([
-        Course(id: UUID(), name: "Spaghetti", dateToBuy: Date(), imageUrl: nil, price: 20.0, colorToShow: Color.brown, store: Store(id: UUID(), name: "Fnac"), urgency: .low),
-        Course(id: UUID(), name: "Steak", dateToBuy: Date(), imageUrl: nil, price: 5.0, colorToShow: Color.red, store: Store(id: UUID(), name: "Carrefour"), urgency: .urgent),
-        Course(id: UUID(), name: "Iphone 15 Pro", dateToBuy: Date(), imageUrl: nil, price: 1050.99, colorToShow: Color.black, store: Store(id: UUID(), name: "Apple"), urgency: .normal),
-        Course(id: UUID(), name: "Iphone 14 Pro", dateToBuy: Date(), imageUrl: nil, price: 1050.99, colorToShow: Color.black, store: Store(id: UUID(), name: "Apple"), urgency: .normal)
-        ]))
+    SingleCourse(Course: Course.previewCourse[0])
 }

@@ -11,7 +11,7 @@ import SwiftUI
 struct ProjectA4App: App {
     var body: some Scene {
         WindowGroup {
-            ContentView()
+            ContentView(myCoursesCollection: CoursesCollection(courses: Course.previewCourse))
         }
     }
 }
