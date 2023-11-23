@@ -8,7 +8,7 @@
 import Foundation
 import SwiftUI
 
-enum CourseUrgency: String, CaseIterable {
+enum CourseUrgency: String, CaseIterable, Codable {
     case low = "Pas urgente"
     case normal = "Normal"
     case urgent = "Urgent"
@@ -22,13 +22,17 @@ class CoursesCollection: ObservableObject {
     }
 }
 
-class Course: Identifiable, ObservableObject {
+class Course: Identifiable, ObservableObject, Codable {
+    enum CodingKeys: CodingKey {
+        case name, dateToBuy, imageUrl, price, colorToShow, store, urgency
+    }
+    
     let id: UUID = UUID()
     @Published var name: String
     @Published var dateToBuy: Date
     @Published var imageUrl: String?
     @Published var price: Float
-    @Published var colorToShow: Color
+    @Published var colorToShow: Color = Color.black
     @Published var store: Store
     @Published var urgency: CourseUrgency
     
@@ -40,6 +44,42 @@ class Course: Identifiable, ObservableObject {
         self.colorToShow = colorToShow
         self.store = store
         self.urgency = urgency
+    }
+    
+    func encode(to encoder: Encoder) throws {
+        var container = encoder.container(keyedBy: CodingKeys.self)
+
+        try container.encode(name, forKey: .name)
+        try container.encode(dateToBuy, forKey: .dateToBuy)
+
+        try container.encode(imageUrl, forKey: .imageUrl)
+        try container.encode(price, forKey: .price)
+
+        try container.encode(store, forKey: .store)
+        try container.encode(urgency, forKey: .urgency)
+        
+        let convertedColor = UIColor(colorToShow)
+        let colorData = try NSKeyedArchiver.archivedData(withRootObject: convertedColor, requiringSecureCoding: false)
+        try container.encode(colorData, forKey: .colorToShow)
+    }
+    
+    required init(from decoder: Decoder) throws {
+        let container = try decoder.container(keyedBy: CodingKeys.self)
+        
+        name = try container.decode(String.self, forKey: .name)
+        dateToBuy = try container.decode(Date.self, forKey: .dateToBuy)
+
+        imageUrl = try container.decode(String.self, forKey: .imageUrl)
+        price = try container.decode(Float.self, forKey: .price)
+
+        store = try container.decode(Store.self, forKey: .store)
+        urgency = try container.decode(CourseUrgency.self, forKey: .urgency)
+        
+        if let colorData = try container.decodeIfPresent(Data.self, forKey: .colorToShow) {
+            if let uiColor = try NSKeyedUnarchiver.unarchivedObject(ofClass: UIColor.self, from: colorData) {
+                self.colorToShow = Color(uiColor)
+            }
+        }
     }
 }
 

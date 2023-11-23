@@ -2,7 +2,10 @@ import SwiftUI
 import Foundation
 
 struct ContentView: View {
-    @StateObject var myCoursesCollection: CoursesCollection
+    @Environment(\.scenePhase) private var scenePhase
+    @ObservedObject var myCoursesCollection: CoursesCollection
+    
+    let saveAction: ()->Void
 
     var body: some View {
         
@@ -39,6 +42,15 @@ struct ContentView: View {
                 }
             }
         }
+        .onChange(of: scenePhase) { phase in
+            print(scenePhase)
+            if phase == .inactive {
+                saveAction()
+            }
+        }
+//        .onChange(of: scenePhase) {
+//            if scenePhase == .inactive { saveAction() } 
+//        }
     }
 }
 
@@ -58,6 +70,6 @@ extension Array {
 
 struct ContentView_Previews: PreviewProvider {
     static var previews: some View {
-        ContentView(myCoursesCollection: CoursesCollection(courses: Course.previewCourse))
+        ContentView(myCoursesCollection: CoursesCollection(courses: Course.previewCourse), saveAction: {})
     }
 }

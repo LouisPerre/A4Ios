@@ -7,7 +7,7 @@
 
 import Foundation
 
-struct Store: Identifiable, Hashable {
+struct Store: Identifiable, Hashable, Codable {
     let id: UUID
     let name: String
 }

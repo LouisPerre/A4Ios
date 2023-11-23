@@ -74,7 +74,7 @@ struct SingleCourse: View {
                     Text("Couleur associée : ")
                     Rectangle()
                         .frame(height: 20)
-                        .background(Course.colorToShow)
+                        .foregroundStyle(Course.colorToShow)
                         .cornerRadius(5)
                 }
                 HStack {

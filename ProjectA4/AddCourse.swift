@@ -139,7 +139,7 @@ struct AddCourse: View {
     private func fetchPexelsPhotos() {
         let apiKey = "QprF859P9BhSHL20k4yexJadcC96in9vAcSqvtFQVITdjZ0tuaAlbwyn"
         var query = imageString != "" ? imageString : "course"
-        let perPage = 5 // Change the number of photos you want to fetch
+        let perPage = 15 // Change the number of photos you want to fetch
         SwiftyTranslate.translate(text: query, from: "fr", to: "en") { result in
             switch result {
                 case .success(let translation):
